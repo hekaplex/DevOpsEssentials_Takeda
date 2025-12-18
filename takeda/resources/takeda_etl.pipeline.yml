@@ -1,0 +1,29 @@
+# The main pipeline for takeda
+
+resources:
+  pipelines:
+    takeda_etl:
+      name: sdk_health_etl_${var.schema}
+      catalog: ${var.catalog}
+      schema: ${var.schema}
+      serverless: true
+      root_path: "../src/takeda_etl"
+      continuous: false
+      photon: true
+      channel: PREVIEW
+      serverless: true
+      libraries:
+        - glob:
+          include: /Workspace/Users/labuser13204995_1766028921@vocareum.com/devops-essentials-for-data-engineering-en_us-2.1.0/DevOps Essentials for Data Engineering/src/sdp/**
+        - glob:
+          include: /Workspace/Users/labuser13204995_1766028921@vocareum.com/devops-essentials-for-data-engineering-en_us-2.1.0/DevOps Essentials for Data Engineering/tests/integration_test/**
+      configuration:
+        target: ${var.schema}
+        raw_data_path: /Volumes/labuser13204995_1766028921/default/health
+      environment:
+        dependencies:
+          # We include every dependency defined by pyproject.toml by defining an editable environment
+          # that points to the folder where pyproject.toml is deployed.
+          - --editable ${workspace.file_path}
+
+
